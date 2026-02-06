@@ -1,9 +1,21 @@
-🏢 TP Fil Rouge – Gestion des Réservations de Salles
+# 🏢 TP Fil Rouge – Gestion des Réservations de Salles
 
-📌 Description
+![Node.js](https://img.shields.io/badge/Node.js-18.x-green)
+![Angular](https://img.shields.io/badge/Angular-16-red)
+![MySQL](https://img.shields.io/badge/MySQL-8-blue)
+![License](https://img.shields.io/badge/License-Education-lightgrey)
 
-Ce projet est une application Fullstack permettant la gestion de réservations de salles avec authentification des utilisateurs.
-Il est composé d’une API backend (Node/Express), d’un frontend Angular, ainsi que d’un livrable statique simple. Ce TP sert de fil rouge pour mettre en pratique des notions de backend, frontend, base de données et authentification JWT.
+## 📌 Présentation
+
+**TP Fil Rouge** est un projet **fullstack** réalisé dans un cadre pédagogique.  
+Il permet de gérer la **réservation de salles**, les **utilisateurs**, ainsi que les **ressources**, avec un système d’authentification sécurisé via **JWT**.
+
+Le projet est découpé en trois parties :
+- une **API backend** en Node.js / Express
+- un **frontend Angular**
+- un **livrable statique** en HTML / CSS / JavaScript
+
+---
 
 🧱 Architecture du projet
 ```
@@ -17,6 +29,19 @@ TP fil rouge/
 
 
 ## 🔧 Backend API (http://localhost:3000)
+
+### 🛠 Technologies
+- Node.js
+- Express
+- Sequelize
+- MySQL
+- JSON Web Token (JWT)
+
+  
+### 🔐 Authentification
+L’API est protégée par un middleware **Bearer Token**.  
+Une connexion utilisateur est nécessaire pour accéder aux routes sécurisées.
+
 | Endpoint | Méthode | Auth | Description |
 |----------|---------|------|-------------|
 | `/api/utilisateurs` | GET | Bearer | Liste users |
@@ -42,25 +67,39 @@ POST /api/utilisateurs/login
     }
 
 ```
-🚀 Setup Local
+# 🚀 Installation & Lancement
 
 # Backend
 
-
+```
 cd backend
 npm install
 npm run dev
+```
+➡ API disponible sur http://localhost:3000
 
 
 # Frontend (Angular)
 
-cd ../front
+cd front
+npm install
 ng serve
 
-🗄️ Base MySQL
+🗃 Base de données
+Base de données MySQL requise.
+```
 CREATE DATABASE tp_fil_rouge;
 # Models auto-sync
-
+```
+Configurer le fichier .env :
+```
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=motdepasse
+DB_NAME=tp_fil_rouge
+JWT_SECRET=secret
+```
+Les modèles Sequelize se synchronisent automatiquement au lancement du backend.
 
 📁 Structure Backend
 
