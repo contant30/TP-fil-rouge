@@ -27,7 +27,7 @@ POST /api/utilisateurs/login
 }
 → { "token": "eyJ...", "user": { "id_utilisateur": 16 } }
 
-
+```
 🚀 Setup Local
 
 # Backend
