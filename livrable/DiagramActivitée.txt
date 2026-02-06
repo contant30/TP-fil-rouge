@@ -1,0 +1,45 @@
+sequenceDiagram
+    participant Utilisateur
+    participant ReservationController
+    participant Reservation
+    participant Salle
+    participant Ressource
+    participant Reservation_Ressource
+
+    %% CAS 1 : Création d'une réservation
+    note over Utilisateur,ReservationController: Cas 1 : Créer une réservation
+    Utilisateur->>ReservationController: demanderCréationReservation(date, heure, salle, ressources)
+    ReservationController->>Salle: vérifierDisponibilite(date, heure)
+    Salle-->>ReservationController: disponibilité (oui/non)
+    alt Salle disponible
+        ReservationController->>Reservation: créerReservation(date, heure, id_utilisateur, id_salle)
+        Reservation-->>ReservationController: reservationCréée
+        loop pour chaque ressource
+            ReservationController->>Ressource: vérifierDisponibilite()
+            Ressource-->>ReservationController: disponible (oui/non)
+            ReservationController->>Reservation_Ressource: créerLienReservationRessource(id_reservation, id_ressource, quantite)
+        end
+        ReservationController-->>Utilisateur: confirmationReservation()
+    else Salle non disponible
+        ReservationController-->>Utilisateur: messageErreur("Salle occupée")
+    end
+
+    %% CAS 2 : Annulation d'une réservation
+    note over Utilisateur,ReservationController: Cas 2 : Annuler une réservation
+    Utilisateur->>ReservationController: demanderAnnulationReservation(id_reservation)
+    ReservationController->>Reservation: annulerReservation(id_reservation)
+    Reservation-->>ReservationController: reservationAnnulée
+    ReservationController-->>Utilisateur: confirmationAnnulation()
+
+    %% CAS 3 : Modification d'une réservation
+    note over Utilisateur,ReservationController: Cas 3 : Modifier une réservation
+    Utilisateur->>ReservationController: demanderModificationReservation(id_reservation, nouvellesInfos)
+    ReservationController->>Salle: vérifierDisponibilite(nouvellesInfos.date, nouvellesInfos.heure)
+    Salle-->>ReservationController: disponibilité (oui/non)
+    alt Salle disponible
+        ReservationController->>Reservation: modifierReservation(id_reservation, nouvellesInfos)
+        Reservation-->>ReservationController: reservationModifiée
+        ReservationController-->>Utilisateur: confirmationModification()
+    else Salle non disponible
+        ReservationController-->>Utilisateur: messageErreur("Salle occupée")
+    end

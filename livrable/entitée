@@ -1,0 +1,59 @@
+🔹 Entités
+
+UTILISATEUR
+
+id_utilisateur (PK)
+nom_utilisateur
+email
+mot_de_passe_hash
+
+
+LOGIN
+
+id_login (PK)
+email
+mot_de_passe_hash
+
+SIGNUP
+
+id_signup (PK)
+nom_utilisateur
+email
+mot_de_passe
+
+SALLE
+
+id_salle (PK)
+nom_salle
+capacite
+localisation
+
+RESSOURCE
+
+id_ressource (PK)
+nom_ressource
+quantite
+
+RESERVATION
+
+id_reservation (PK)
+date_reservation
+heure_debut
+heure_fin
+id_utilisateur (FK)
+id_salle (FK)
+
+RESERVATION_RESSOURCE
+
+id_reservation (PK, FK)
+id_ressource (PK, FK)
+quantite_utilisee
+
+🔹 Associations & cardinalités
+
+UTILISATEUR 1 ─── 0..* LOGIN
+UTILISATEUR 1 ─── 0..* SIGNUP
+UTILISATEUR 1 ─── 0..* RESERVATION
+SALLE 1 ─── 0..* RESERVATION
+RESERVATION 0.. ─── 0..** RESSOURCE
+(via RESERVATION_RESSOURCE)

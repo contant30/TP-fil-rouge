@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Utilisateurs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto space-y-6">
+
+         <!-- Header partagé -->
+        <div id="header-container"></div>
+
+        <!-- En-tête -->
+        <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-blue-900 flex items-center gap-2 mb-2">
+                        <i class="fas fa-users w-6 h-6 text-blue-600"></i>
+                        Gestion des utilisateurs
+                    </h2>
+                    <p class="text-gray-600">Gérez les comptes utilisateurs et leurs permissions</p>
+                </div>
+                <button onclick="openDialog()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors">
+                    <i class="fas fa-plus w-4 h-4"></i>
+                    Nouvel utilisateur
+                </button>
+            </div>
+        </div>
+
+        <!-- Liste des utilisateurs -->
+        <div id="users-list">
+            <!-- Contenu généré par JS -->
+        </div>
+
+        <!-- Dialog Ajouter/Modifier -->
+        <div id="user-dialog" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4" onclick="closeDialog()">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+                <form onsubmit="handleSubmit(event)">
+                    <div class="flex items-center gap-3 p-6 border-b border-gray-200">
+                        <i class="fas fa-users w-6 h-6 text-blue-600"></i>
+                        <h3 id="dialog-title" class="text-xl font-bold text-blue-900">Nouvel utilisateur</h3>
+                    </div>
+                    
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label class="text-gray-700 mb-2 block">Nom complet</label>
+                            <input id="user-name" type="text" placeholder="Ex: Jean Dupont" required 
+                                   class="w-full border-2 border-gray-300 focus:border-blue-500 rounded-lg px-4 py-3">
+                        </div>
+                        <div>
+                            <label class="text-gray-700 mb-2 block">Adresse email</label>
+                            <input id="user-email" type="email" placeholder="exemple@email.com" required 
+                                   class="w-full border-2 border-gray-300 focus:border-blue-500 rounded-lg px-4 py-3">
+                        </div>
+                        <div id="password-field" class="">
+                            <label class="text-gray-700 mb-2 block">Mot de passe</label>
+                            <input id="user-password" type="password" placeholder="Mot de passe" required minlength="6"
+                                   class="w-full border-2 border-gray-300 focus:border-blue-500 rounded-lg px-4 py-3">
+                            <p class="text-xs text-gray-500 mt-1">Minimum 6 caractères</p>
+                        </div>
+                        <div>
+                            <label class="text-gray-700 mb-2 block">Rôle</label>
+                            <select id="user-role" class="w-full border-2 border-gray-300 focus:border-blue-500 rounded-lg px-4 py-3">
+                                <option value="user">Utilisateur</option>
+                                <option value="admin">Administrateur</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Les administrateurs ont accès à toutes les fonctionnalités</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+                        <button type="button" onclick="closeDialog()" class="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 px-6 rounded-xl font-medium transition-colors">
+                            Annuler
+                        </button>
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-medium transition-colors">
+                            <span id="submit-text">Créer</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dialog suppression -->
+        <div id="delete-dialog" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4" onclick="closeDeleteDialog()">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onclick="event.stopPropagation()">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-trash text-red-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">Confirmer la suppression</h3>
+                        <p class="text-gray-600">Êtes-vous sûr de vouloir supprimer cet utilisateur ? Toutes ses réservations seront également supprimées. Cette action est irréversible.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="closeDeleteDialog()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 px-4 rounded-lg font-medium transition-colors">
+                        Annuler
+                    </button>
+                    <button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg font-medium transition-colors">
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/front/utilisateurs.js"></script>
+</body>
+</html>

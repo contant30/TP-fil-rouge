@@ -1,0 +1,49 @@
+-- Table Utilisateur
+CREATE TABLE Utilisateur (
+    id_utilisateur INT PRIMARY KEY AUTO_INCREMENT,
+    nom_utilisateur VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    mot_de_passe_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL
+);
+
+-- Table Salle
+CREATE TABLE Salle (
+    id_salle INT PRIMARY KEY AUTO_INCREMENT,
+    nom_salle VARCHAR(100) NOT NULL,
+    capacite INT NOT NULL,
+    localisation VARCHAR(150)
+);
+
+-- Table Ressource
+CREATE TABLE Ressource (
+    id_ressource INT PRIMARY KEY AUTO_INCREMENT,
+    nom_ressource VARCHAR(100) NOT NULL,
+    quantite INT NOT NULL
+);
+
+-- Table Reservation
+CREATE TABLE Reservation (
+    id_reservation INT PRIMARY KEY AUTO_INCREMENT,
+    date_reservation DATE NOT NULL,
+    heure_debut TIME NOT NULL,
+    heure_fin TIME NOT NULL,
+    id_utilisateur INT NOT NULL,
+    id_salle INT NOT NULL,
+    CONSTRAINT fk_utilisateur
+        FOREIGN KEY (id_utilisateur) REFERENCES Utilisateur(id_utilisateur),
+    CONSTRAINT fk_salle
+        FOREIGN KEY (id_salle) REFERENCES Salle(id_salle)
+);
+
+-- Table associative Reservation_Ressource
+CREATE TABLE Reservation_Ressource (
+    id_reservation INT NOT NULL,
+    id_ressource INT NOT NULL,
+    quantite_utilisee INT NOT NULL,
+    PRIMARY KEY (id_reservation, id_ressource),
+    CONSTRAINT fk_reservation
+        FOREIGN KEY (id_reservation) REFERENCES Reservation(id_reservation),
+    CONSTRAINT fk_ressource
+        FOREIGN KEY (id_ressource) REFERENCES Ressource(id_ressource)
+);

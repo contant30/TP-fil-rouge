@@ -1,0 +1,38 @@
+classDiagram
+    class Utilisateur {
+        -int id_utilisateur
+        -string nom_utilisateur
+        -string email
+        -string role
+        +creerReservation() : Réservation
+        +supprimerReservation() : void
+    }
+
+    class Salle {
+        -int id_salle
+        -string nom_salle
+        -int capacite
+        -string localisation
+        +estDisponible(date, heure) : boolean
+    }
+
+    class Ressource {
+        -int id_ressource
+        -string nom_ressource
+        -int quantite
+        +estDisponible() : boolean
+    }
+
+    class Réservation {
+        -int id_reservation
+        -date date_reservation
+        -time heure_debut
+        -time heure_fin
+        +validerReservation() : boolean
+        +annulerReservation() : void
+    }
+
+    %% Relations
+    Utilisateur "1" --> "0..*" Réservation : fait
+    Salle "1" --> "0..*" Réservation : utilisée dans
+    Réservation "0..*" --> "0..*" Ressource : inclut

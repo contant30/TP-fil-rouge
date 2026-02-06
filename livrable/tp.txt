@@ -1,0 +1,148 @@
+Système de réservation : salles, ressources, créneaux horaires
+
+Étape 2 — Analyse du cahier des charges
+
+Cahier des charges 
+
+Description générale : Application qui permet de reserver des salles de réunion et de cocher les ressources utilisées.
+L'interface de reservation se ferat sur une page web sur laquel il y aura un calendrier du lundi au vendredi de 8h00 a 17h00.
+
+Fonctionnalités :
+- Gestion des salles de réunion
+- Gestion des ressources
+- Gestion des réservations
+- Gestion des utilisateurs
+
+Contraintes techniques : 
+- Front end : HTML, CSS, JS
+- Back end : Node.js + express
+- Base de données : Mysql
+- Authentification : JWT et mots de passe hashés
+
+Ecrans obligatoires :
+- Page de connexion
+- Page d'inscription
+- Page de gestion des salles
+- Page de gestion des ressources
+- Page de gestion des réservations
+- Page de gestion des utilisateurs
+- Page de bienvenue
+
+Règles métier :
+- Une reservation doit avoir le nom de la salle, le nom de l'utilisateur, la date, le créneau et les ressources.
+- Un utilisateur peut faire plusieurs reservations.
+- Une salle peut être reservée que par un utilisateur à la fois.
+- Un créneau horaire peut être reservé que par un utilisateur à la fois.
+- Une ressource peut etre reservée que par un utilisateur à la fois.
+- Un utilisateur peut se connecter avec un nom d'utilisateur, un mot de passe et se deconnecter.
+- Un utilisateur peut se modifier et se supprimer.
+- Une reservation ne peut etre supprimée que par l'utilisateur qui l'a faite.
+
+Contraintes métier :
+
+-Un créneau donné (date + heure) ne peut être réservé qu’une fois pour une même salle.
+-Seul l’utilisateur ayant créé la réservation peut la supprimer.
+
+
+
+
+
+
+Prompt analyse du cahier des charges:
+Voici le cahier des charges. Liste moi les entités du systèmes, leurs attributs et leurs relations. Ne dépasse pas 4 entités. Explique ton raisonnement.
+
+
+
+Étape 3 — Conception UML + Maquette IA
+
+Prompt diagramme de classe:
+Génère moi un diagramme de classe en mermaid pour projet de système de réservation de salle avec les entités : Réservation, Ressource, Salle, Utilisateur. 
+Respecte les bonnes pratiques : pas plus de 4 attributs par classe, relations simples.
+
+
+
+Prompt diagramme de séquence :
+Génère moi une version complète du diagramme de séquence UML pour plusieurs cas d’usage pour mon système de réservation de salles : création, modification et annulation d’une réservation.
+Respecte les bonnes pratiques.
+
+
+Prompt wireframe :
+Crée un wireframe simple et clair avec une pallette de couleurs pour la page suivante par rapport au cahier des charges :
+Page de reservation de salle, avec un calandrier, au dessus un menu déroulant pour choisir la salle.
+Sur le header avoir les onglets suivants: réservation , salles, ressources, utilisateurs.
+footer avec les liens suivants: mentions légales, politique de confidentialité, politique de cookies.
+Contraintes : responsive, hiérarchie visible, CTA bien mis en avant.
+Format : wireframe Figma/Excalidraw
+
+
+Réalise moi la partie Front end en respectant le cahier des charges et les contraintes techniques.
+Je veux que les pages soit interconnectées et que les données soient persistantes.
+Met moi tout le js dans un seul fichier app.js.
+Met moi tout le css dans un seul fichier style.css.
+Donne moi le code complet factorisé et fusionner les doublons 
+
+
+
+
+
+Réalise moi la partie Back end en respectant le cahier des charges et les contraintes techniques.
+Génère-moi les contrôleurs CRUD complets pour mon API Node.js REST avec gestion d erreurs professionnelle.
+
+Contexte technique :
+- Node.js + Express
+- Sequelize ORM avec modèles User et Task
+- Authentification JWT
+- Validation avec express-validator
+- Format de réponse JSON standardisé
+
+---
+
+Contrôleur 1 : authController.js
+
+Fonctionnalités :
+1. signup (POST /api/auth/signup)
+- Créer un nouvel utilisateur
+- Valider : email unique, password >= 8 caractères
+- Hasher le password (bcrypt via hook Sequelize)
+- Retourner : user (sans password) + token JWT
+
+
+Génère-moi toutes les routes REST pour mon API Node.js Express avec protection JWT et validation.
+
+Contexte technique :
+- Express Router
+- Authentification JWT via middleware
+- Validation avec express-validator
+- Contrôleurs : authController, userController
+- Middleware : authMiddleware (vérifie JWT)
+
+
+Génère-moi le code JavaScript complet pour connecter mes pages HTML statiques à mon API  .
+
+Contexte technique :
+- Backend : API Users complète (JWT auth, CRUD users) sur http://localhost:3000/api
+- Frontend : HTML statiques au root (login.html, index.html, dashboard.html)
+- Pas de framework : Vanilla JS + fetch API uniquement
+- Styles CSS existants (signup-container, btn, form-group, user-item, boutons alignés)
+- Stockage token : localStorage
+
+Endpoints API disponibles :
+- GET /api/auth/login
+- GET /api/auth/signup
+- GET /api/auth/logout
+- GET /api/auth/refresh-token
+- GET /api/auth/verify-token
+- GET /api/auth/verify-token
+
+
+
+
+
+
+
+
+
+
+
+
+

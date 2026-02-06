@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Salles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Header partagé -->
+    <div id="header-container"></div>
+
+        <!-- En-tête -->
+        <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-blue-900 flex items-center gap-2 mb-2">
+                        <i class="fas fa-box w-6 h-6 text-blue-600"></i>
+                    Gestion des Salles
+                    </h2>
+                    <p class="text-gray-600">Ajoutez, modifiez ou supprimez des salles de réunion</p>
+                </div>
+                <button onclick="openDialog()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors">
+                    <i class="fas fa-plus w-4 h-4"></i> 
+                    Nouvelle salle
+                </button>
+            </div>
+        </div>
+
+        <!-- Tableau Desktop -->
+        <div class="hidden md:block overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-200">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="p-4 text-left font-semibold text-gray-900">Nom de la salle</th>
+                        <th class="p-4 text-left font-semibold text-gray-900">Capacité</th>
+                        <th class="p-4 text-left font-semibold text-gray-900">Description</th>
+                        <th class="p-4 text-center font-semibold text-gray-900 w-32">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rooms-table-body">
+                    <!-- Rempli par JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cartes Mobile -->
+        <div id="rooms-mobile" class="md:hidden grid gap-4 bg-white rounded-xl shadow-sm border p-6">
+            <!-- Rempli par JS -->
+        </div>
+    </main>
+
+    <!-- Modal Ajout/Modification -->
+    <div id="room-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4" onclick="closeDialog(event)">
+        <div class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="p-6 border-b border-gray-200">
+                <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Nouvelle salle</h2>
+                <p id="modal-desc" class="text-gray-600 mt-1">Ajoutez une nouvelle salle de réunion</p>
+            </div>
+            <form id="room-form" class="p-6 space-y-4" onsubmit="handleSubmit(event)">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nom de la salle</label>
+                    <input type="text" id="room-name" required 
+                           class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Capacité (personnes)</label>
+                    <input type="number" id="room-capacity" min="1" required 
+                           class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea id="room-description" rows="3" 
+                              class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-vertical"></textarea>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeDialog()" 
+                            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-lg font-medium transition-all">
+                        Annuler
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium shadow-lg transition-all">
+                        Ajouter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Suppression -->
+    <div id="delete-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4" onclick="closeDelete(event)">
+        <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center" onclick="event.stopPropagation()">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Confirmer suppression</h3>
+            <p class="text-gray-600 mb-8">Êtes-vous sûr ? Toutes les réservations associées seront supprimées. Irréversible.</p>
+            <div class="flex gap-3">
+                <button onclick="closeDelete()" class="flex-1 bg-gray-200 hover:bg-gray-300 py-3 px-6 rounded-lg font-medium transition-all">
+                    Annuler
+                </button>
+                <button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-medium shadow-lg transition-all">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script partagé + logique salles -->
+    <script src="/front/salles.js"></script>
+    
+</body>
+</html>
