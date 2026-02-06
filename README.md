@@ -1,13 +1,18 @@
-# 🚀 TP Fil Rouge - Gestion Réservations Salles
+🏢 TP Fil Rouge – Gestion des Réservations de Salles
 
-## 🏗️ Architecture Fullstack
+📌 Description
 
+Ce projet est une application Fullstack permettant la gestion de réservations de salles avec authentification des utilisateurs.
+Il est composé d’une API backend (Node/Express), d’un frontend Angular, ainsi que d’un livrable statique simple. Ce TP sert de fil rouge pour mettre en pratique des notions de backend, frontend, base de données et authentification JWT.
 
+🧱 Architecture du projet
+```
 TP fil rouge/
 ├── backend/ Node/Express/Sequelize/MySQL + JWT
 ├── front/ Angular Frontend
 ├── livrable/ HTML/CSS/JS statiques
 └── .env DB config
+```
 
 
 
@@ -20,23 +25,35 @@ TP fil rouge/
 
 **Exemple login**:
 ```json
-POST /api/utilisateurs/login
+POST /api/utilisateurs/register
 {
-  "email": "tzzzest@fizlrzouge.fr",
-  "mot_de_passe": "mdp"
+  "nom_utilisateur": "test",
+  "email": "test@test.fr",
+  "mot_de_passe": "test123zz",
+  "role": "admin"
 }
-→ { "token": "eyJ...", "user": { "id_utilisateur": 16 } }
+
+POST /api/utilisateurs/login
+→ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91dGlsaXNhdGV1ciI6MTgsImlhdCI6MTc3MDM5MjI4NSwiZXhwIjoxNzcwNDc4Njg1fQ.uKAUTG8dEEEW7VHfIe-bTI0cMFiqgABE9gL-r543yJY",
+    "user": {
+        "id_utilisateur": 18,
+        "nom_utilisateur": "test",
+        "email": "test@test.fr"
+    }
 
 ```
 🚀 Setup Local
 
 # Backend
+
+
 cd backend
 npm install
 npm run dev
 
 
 # Frontend (Angular)
+
 cd ../front
 ng serve
 
@@ -44,12 +61,20 @@ ng serve
 CREATE DATABASE tp_fil_rouge;
 # Models auto-sync
 
+
 📁 Structure Backend
+
+```
 backend/
 ├── models/     Utilisateur/Salle/Ressource/Reservation
 ├── services/   utilisateurService.js (JWT/CRUD)
 ├── middleware/ auth.js (Bearer verify)
 ├── routes/     utilisateurs.js (protected)
 └── server.js   Express app
+```
+
+📄 Livrable statique
+
+Le dossier livrable/ contient des pages HTML/CSS/JS statiques servant d’exemples ou de démonstrations.
 
 
