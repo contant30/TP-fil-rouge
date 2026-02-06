@@ -29,6 +29,7 @@ POST /api/utilisateurs/login
 
 
 🚀 Setup Local
+
 # Backend
 cd backend
 npm install
@@ -48,6 +49,8 @@ backend/
 ├── services/   utilisateurService.js (JWT/CRUD)
 ├── middleware/ auth.js (Bearer verify)
 ├── routes/     utilisateurs.js (protected)
-└── server.js   Express app
+└── server.js   Express app.
+
+
 
 
