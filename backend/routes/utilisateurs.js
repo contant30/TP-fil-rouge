@@ -46,4 +46,11 @@ router.delete('/:id', async (req, res) => {
   res.json({ message: 'Supprimé' });
 });
 
+// 🔍 DEBUG: Voir toutes les routes
+router.get('/debug', (req, res) => {
+  res.json({
+    routes: router.stack.map(layer => layer.route?.path || 'middleware')
+  });
+});
+
 module.exports = router;

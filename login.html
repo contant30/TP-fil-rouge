@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Réservation de Salles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div class="max-w-md w-full">
+        <!-- Header avec logo -->
+        <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6 sm:p-8 text-center mb-6">
+            <div class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-key text-3xl text-blue-600"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-blue-900 mb-1">Connexion</h1>
+            <p class="text-gray-600">Accédez aux réservations de salles</p>
+        </div>
+
+        <!-- Formulaire principal -->
+        <div class="bg-white rounded-xl shadow-md border border-blue-100 p-6 sm:p-8 space-y-6">
+            <!-- Messages d'erreur/succès -->
+            <div id="errorMsg" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+            <div id="successMsg" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg text-sm"></div>
+
+            <!-- Formulaire -->
+            <form id="loginForm">
+                <!-- Email -->
+                <div class="space-y-2">
+                    <label for="email" class="text-gray-700 block flex items-center gap-2 text-sm font-medium">
+                        <i class="fas fa-envelope w-4 h-4 text-blue-600"></i>
+                        Email *
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="marie@test.com"
+                        class="w-full h-12 px-4 border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200/50 rounded-lg text-base transition-colors"
+                    >
+                </div>
+
+                <!-- Mot de passe -->
+                <div class="space-y-2">
+                    <label for="password" class="text-gray-700 block flex items-center gap-2 text-sm font-medium">
+                        <i class="fas fa-lock w-4 h-4 text-blue-600"></i>
+                        Mot de passe *
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required 
+                            minlength="6"
+                            placeholder="Votre mot de passe"
+                            class="w-full h-12 pl-4 pr-12 border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200/50 rounded-lg text-base transition-colors"
+                        >
+                        <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
+                            <i class="fas fa-eye w-5 h-5" id="toggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bouton submit -->
+                <button type="submit" id="submitBtn" class="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl text-base transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                    <span id="loadingSpinner" class="hidden">
+                        <i class="fas fa-spinner fa-spin animate-spin w-4 h-4"></i>
+                    </span>
+                    Se connecter
+                </button>
+            </form>
+        </div>
+
+        <!-- Liens -->
+        <div class="text-center mt-6">
+            <p class="text-sm text-gray-600">
+                Pas de compte ? <a href="signup.html" class="text-blue-600 hover:text-blue-700 font-medium">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Toggle mot de passe
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Gestion du formulaire - VERSION ROBUSTE
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                email: document.getElementById('email').value.trim(),
+                mot_de_passe: document.getElementById('password').value.trim()
+            };
+
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loadingSpinner');
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+
+            // Reset messages
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+
+            // Loading state
+            submitBtn.disabled = true;
+            loading.classList.remove('hidden');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin animate-spin w-4 h-4"></i> Connexion...';
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                const response = await fetch(`${API_BASE}/utilisateurs/login`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                // 🔍 DEBUG COMPLET
+                console.log('📡 Status:', response.status);
+                console.log('📄 Content-Type:', response.headers.get('content-type'));
+                const rawText = await response.text();
+                console.log('📄 Raw response:', rawText);
+
+                // Parse ROBUSTE (gère HTML/vide/JSON)
+                let data = { success: false };
+                if (rawText) {
+                    try {
+                        data = JSON.parse(rawText);
+                        console.log('✅ JSON parsed:', data);
+                    } catch (parseError) {
+                        console.error('❌ Non-JSON raw:', rawText.slice(0, 100));
+                        throw new Error(`Réponse non-JSON: ${rawText.slice(0, 50)}...`);
+                    }
+                }
+
+                if (response.ok && data.token) {
+                    successMsg.innerHTML = `✅ Connexion réussie ! Token: ${data.token.substring(0, 20)}...`;
+                    successMsg.classList.remove('hidden');
+                    
+                    // Stockage token
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user || {}));
+                    
+                    // Redirection
+                    setTimeout(() => {
+                        window.location.href = 'reservation.html';
+                    }, 1500);
+                    
+                } else {
+                    const errorMessage = data.message || data.error || 'Identifiants incorrects';
+                    errorMsg.textContent = `❌ ${errorMessage}`;
+                    errorMsg.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Erreur connexion:', error);
+                
+                let errorMessage = 'Erreur réseau';
+                if (error.name === 'AbortError') errorMessage = '⏰ Délai dépassé';
+                else if (error.message.includes('Failed to fetch')) errorMessage = '❌ Serveur localhost:3000';
+                else errorMessage = `❌ ${error.message}`;
+                
+                errorMsg.textContent = errorMessage;
+                errorMsg.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                loading.classList.add('hidden');
+                submitBtn.innerHTML = originalText;
+            }
+        });
+    </script>
+</body>
+</html>
