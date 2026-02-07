@@ -26,19 +26,18 @@ router.post('/login', async (req, res) => {
 // ✅ PUBLIC: GET tous (sans auth pour admin panel)
 
 router.get('/', async (req, res) => {
-  console.log('🎯 GET /api/utilisateurs - START');
+  console.log('🎯 GET /api/utilisateurs - DB REELLE');
   
   try {
-    // TEST 1: Données mock
-    res.json([
-      {id:1, name:'Marie Admin', email:'marie@test.com', role:'admin'},
-      {id:2, name:'Jean User', email:'jean@test.com', role:'user'}
-    ]);
-    console.log('✅ Mock OK');
+    const utilisateurService = require('../services/utilisateurService');
+    const users = await utilisateurService.getAll();  // Ou direct: require('../models').Utilisateur.findAll({ raw: true })
+    
+    console.log(`✅ DB Users trouvés: ${users.length}`, users.map(u => u.id));
+    res.json(users);
     
   } catch (error) {
-    console.error('💥 ERREUR:', error);
-    res.status(500).json({ error: error.message });
+    console.error('💥 DB ERREUR:', error.message);
+    res.status(500).json({ error: 'DB échouée', details: error.message });
   }
 });
 

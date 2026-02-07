@@ -3,6 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { sequelize } = require('./models/index');
+const path = require('path');  // ✅ LIGNE 1: AJOUTÉ
+const fs = require('fs');      // ✅ LIGNE 2: AJOUTÉ
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +13,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// 🔥 STATIC RACINE PROJET (frère backend/) ✅ LIGNES 3-6: INSÉRÉ ICI
+const ROOT_PATH = path.join(__dirname, '..');
+console.log('📂 Serve static:', ROOT_PATH);
+console.log('✅ utilisateurs.html:', fs.existsSync(path.join(ROOT_PATH, 'utilisateurs.html')) ? 'OK' : 'MANQUANT');
+app.use(express.static(ROOT_PATH));
+app.use('/front', express.static(path.join(ROOT_PATH, 'front')));
 
 
 
