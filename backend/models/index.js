@@ -6,7 +6,9 @@ const sequelize = new Sequelize(
   process.env.DB_NAME || 'tp_fil_rouge',
   process.env.DB_USER || 'root',
   process.env.DB_PASS || '',
+  
   { host: 'localhost', dialect: 'mysql', logging: console.log }
+  
 );
 
 // 1. CHARGE TOUS modèles AVANT associations
@@ -18,6 +20,8 @@ const Reservation = require('./reservation')(sequelize, DataTypes);
 // ✅ VÉRIFs DEBUG (retirez après)
 console.log('Utilisateur:', typeof Utilisateur); // function
 console.log('Reservation:', typeof Reservation); // function
+
+
 
 // 2. ASSOCIATIONS APRÈS TOUS chargés
 Utilisateur.hasMany(Reservation, { foreignKey: 'id_utilisateur', as: 'reservations' });

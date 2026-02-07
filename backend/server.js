@@ -1,4 +1,4 @@
-// server.js - TP Fil Rouge PRODUCTION
+// server.js - TP Fil Rouge ANTI-CRASH
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -12,13 +12,15 @@ app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// 🔥 Routes (toutes prêtes !)
+
+
+// 🔥 Routes
 app.use('/api/utilisateurs', require('./routes/utilisateurs'));
 app.use('/api/salles', require('./routes/salles'));
 app.use('/api/ressources', require('./routes/ressources'));
 app.use('/api/reservations', require('./routes/reservations'));
 
-// 🧪 Status API
+// 🧪 Status
 app.get('/status', (req, res) => {
   res.json({ 
     success: true, 
@@ -33,27 +35,24 @@ app.get('/status', (req, res) => {
   });
 });
 
-// 🛡️ 404 Handler (pro !)
-app.use('*', (req, res) => {
-  res.status(404).json({ error: `Route ${req.originalUrl} non trouvée` });
-});
-
-// 💥 Erreurs globales
+// 🛡️ 404 + Errors
+app.use('*', (req, res) => res.status(404).json({ error: `Route ${req.originalUrl} non trouvée` }));
 app.use((err, req, res, next) => {
   console.error('💥 ERROR:', err.stack);
   res.status(500).json({ error: 'Erreur serveur interne' });
 });
 
-// 🚀 DB + Serveur (sync dev only)
-sequelize.authenticate({ timeout: 60000 })
+// 🚀 DB SAFE (NO SYNC ALTER !)
+sequelize.authenticate({ timeout: 10000 })
   .then(async () => {
-    console.log('✅ DB Connectée (MySQL)');
+    console.log('✅ DB Connectée (MySQL) - Tables manuelles OK');
     
+    // Sync OPTIONNEL léger (dev only)
     try {
-      await sequelize.sync({ alter: true });
-      console.log('✅ Tables Sync/Alter OK');
+      await sequelize.sync({ alter: false });  // ✅ Pas ALTER destructif
+      console.log('✅ Tables vérifiées');
     } catch (syncErr) {
-      console.warn('⚠️ Sync SKIP (tables OK):', syncErr.message);
+      console.warn('⚠️ Sync SKIP (tables existantes):', syncErr.message);
     }
     
     app.listen(PORT, () => {
@@ -62,9 +61,9 @@ sequelize.authenticate({ timeout: 60000 })
     });
   })
   .catch(err => {
-    console.error('❌ DB Connect FAIL:', err);
-    console.error('Stack:', err.stack);  // Détails !
+    console.error('❌ DB Connect FAIL:', err.message);
+    console.error('Stack:', err.stack);
     process.exit(1);
   });
 
-module.exports = app;  // Tests
+module.exports = app;

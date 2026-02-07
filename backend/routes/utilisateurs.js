@@ -23,13 +23,32 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// ✅ PUBLIC: GET tous (sans auth pour admin panel)
+
+router.get('/', async (req, res) => {
+  console.log('🎯 GET /api/utilisateurs - START');
+  
+  try {
+    // TEST 1: Données mock
+    res.json([
+      {id:1, name:'Marie Admin', email:'marie@test.com', role:'admin'},
+      {id:2, name:'Jean User', email:'jean@test.com', role:'user'}
+    ]);
+    console.log('✅ Mock OK');
+    
+  } catch (error) {
+    console.error('💥 ERREUR:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Privé: CRUD
 router.use(require('../middleware/auth')); // Guard après public
 
-router.get('/', async (req, res) => {
+/*router.get('/', async (req, res) => {
   const users = await utilisateurService.getAll();
   res.json(users);
-});
+});*/
 
 router.get('/:id', async (req, res) => {
   const user = await utilisateurService.getById(req.params.id);

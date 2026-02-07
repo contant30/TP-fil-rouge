@@ -42,11 +42,23 @@ TP fil rouge/
 L’API est protégée par un middleware **Bearer Token**.  
 Une connexion utilisateur est nécessaire pour accéder aux routes sécurisées.
 
-| Endpoint | Méthode | Auth | Description |
-|----------|---------|------|-------------|
-| `/api/utilisateurs` | GET | Bearer | Liste users |
-| `/api/utilisateurs/login` | POST | - | Connexion JWT |
-| `/api/salles` | GET | Bearer | Toutes les salles |
+| Endpoint                | Méthode | Auth   | Description               |
+| ----------------------- | ------- | ------ | ------------------------- |
+| /api/utilisateurs       | GET     | Bearer | Liste tous les users [✅]  |
+| /api/utilisateurs/:id   | GET     | Bearer | Détail user [✅]           |
+| /api/utilisateurs       | POST    | -      | Register nouveau user [✅] |
+| /api/utilisateurs/login | POST    | -      | Connexion → JWT token [✅] |
+| /api/utilisateurs/:id   | PUT     | Bearer | Modifier user [✅]         |
+| /api/utilisateurs/:id   | DELETE  | Bearer | Supprimer user [✅]        |
+| /api/utilisateurs/debug | GET     | -      | Debug routes [✅]          |
+| /api/salles             | GET     | Bearer | Toutes les salles [🔄]    |
+| /api/salles/:id         | GET     | Bearer | Détail salle [🔄]         |
+| /api/salles             | POST    | Bearer | Créer salle [🔄]          |
+| /api/salles/:id         | PUT     | Bearer | Modifier salle [🔄]       |
+| /api/salles/:id         | DELETE  | Bearer | Supprimer salle [🔄]      |
+| /api/ressources         | GET     | Bearer | Toutes ressources [🔄]    |
+| /api/reservations       | GET     | Bearer | Toutes réservations [🔄]  |
+| /api/reservations       | POST    | Bearer | Créer réservation [🔄]    |
 
 **Exemple login**:
 ```json
